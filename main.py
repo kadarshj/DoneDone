@@ -176,7 +176,7 @@ async def message(sid, data):
         # Call the async function that handles the agent processing
         #result = await process_user_query_simple(user_query, sid)
         await process_user_query_simple(user_query, sid)
-        #await sio.emit('message', {'detail': result}, to=sid)
+        #await sio.emit('message', {'detail': result}, to=sid) #not required here, handled in process_user_query_simple
         
     except Exception as e:
         print(f"Error in message handler: {e}")
