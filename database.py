@@ -1,0 +1,31 @@
+from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo.server_api import ServerApi
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+# MongoDB connection settings
+MONGO_URI = os.getenv("MONGO_URI")  # Replace with your MongoDB URI
+DB_NAME = os.getenv("DB_NAME")
+
+# Initialize MongoDB client
+client = AsyncIOMotorClient(MONGO_URI, server_api=ServerApi('1'))
+db = client[DB_NAME]
+
+# Collections
+users_collection = db["users"]
+otp_collection = db["otps"]
+
+async def ping_server():
+    """Test MongoDB connection"""
+    try:
+        await client.admin.command('ping')
+        print("Pinged your deployment. Successfully connected to MongoDB!")
+        # Create index for OTP collection (expire after 5 minutes)
+        await otp_collection.create_index("created_at", expireAfterSeconds=300)
+        # Create unique index for user email
+        await users_collection.create_index("email", unique=True)
+    except Exception as e:
+        print(f"Connection error: {e}")
