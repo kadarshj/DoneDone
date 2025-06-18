@@ -110,7 +110,7 @@ async def process_user_query_simple(user_query: str, sid: str) -> str:
             
             # Emit response only once when both sub-agent responses are received
             if final_response["sales"] and final_response["grocery"] and not response_emitted:
-                #response_text = f"Task Delegation:\n{final_response['delegation'] or 'No delegation details captured.'}\n\nGrocery List:\n{final_response['grocery'] or 'No response received from grocery agent.'}\n\nElectronics Sales:\n{final_response['sales'] or 'No response received from sales agent.'}"
+                response_text = f"Task Delegation:\n{final_response['delegation'] or 'No delegation details captured.'}\n\nGrocery List:\n{final_response['grocery'] or 'No response received from grocery agent.'}\n\nElectronics Sales:\n{final_response['sales'] or 'No response received from sales agent.'}"
                 #print(f"Emitting final response: {response_text[:100]}...")
                 #await sio.emit('message', {'detail': response_text}, to=sid)
                 await sio.emit('message', {'task_delegation': final_response['delegation'] or 'No delegation details captured.'}, to=sid)
