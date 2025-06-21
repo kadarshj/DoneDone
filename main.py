@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from jose import jwt
 from urllib.parse import parse_qs
 from datetime import datetime, timedelta
+from fastapi.middleware.cors import CORSMiddleware
 import json
 
 load_dotenv()
@@ -22,6 +23,21 @@ load_dotenv()
 # Initialize FastAPI app
 app = FastAPI()
 
+# ✅ Allowed origins (Change to match your frontend URL)
+origins = [
+    "http://localhost:5173",  # React, Next.js frontend (development)
+    "http://127.0.0.1:5173",  # Alternative local address
+    "https://donedone.aminobots.com",  # Production frontend domain
+]
+
+# ✅ Add CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow specific origins
+    allow_credentials=True,  # Allow cookies & authentication
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 # Initialize Socket.IO server with JWT authentication
 #sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
 socket_app = socketio.ASGIApp(sio)
