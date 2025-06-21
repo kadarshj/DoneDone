@@ -1,5 +1,5 @@
 # Use a slim Python image as the base
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set environment variables to prevent prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
