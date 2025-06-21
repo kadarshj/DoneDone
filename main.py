@@ -128,7 +128,8 @@ async def connect(sid, environ, auth=None):
             return
         await sio.save_session(sid, {"user": user})
         print(f"Client connected: {sid} (email: {email})")
-        await sio.emit('message', {'data': 'Connected to server!'}, to=sid)
+        #await sio.emit('message', {'data': 'Connected to server!'}, to=sid)
+        await sio.emit('Commander', {'type':"commander", "Status": "Started", 'response': f'Commander {user["name"]} initiate recording!'}, to=sid)
     except Exception as e:
         print(f"WebSocket auth error for client {sid}: {e}")
         await sio.disconnect(sid)
@@ -174,6 +175,7 @@ async def message(sid, data):
         print(f"Message from {sid}: {data} | User query: {user_query}")
         
         # Call the async function that handles the agent processing
+        await sio.emit('Agent', {'type':"Coordinator Agent", "Status": "Initiated", 'response': 'Coordinator Agent initiating the process.'}, to=sid)
         #result = await process_user_query_simple(user_query, sid)
         await process_user_query_simple(user_query, sid)
         #await sio.emit('message', {'detail': result}, to=sid) #not required here, handled in process_user_query_simple

@@ -48,6 +48,9 @@ async def process_user_query_simple(user_query: str, sid: str) -> str:
     app_name = "multiagent_system"
     user_id = "user_001"
     
+    await sio.emit('Agent', {'type':"Grocery Agent", "Status": "Initiated", 'response': 'Grocery Agent initiating the process.'}, to=sid)
+    await sio.emit('Agent', {'type':"Sales Agent", "Status": "Initiated", 'response': 'Sales Agent initiating the process.'}, to=sid)
+
     try:
         print(f"Processing query for session {sid}: {user_query[:50]}...")
         await sio.emit('message', {'detail': 'Coordinator Agent processing...'}, to=sid)
@@ -113,9 +116,12 @@ async def process_user_query_simple(user_query: str, sid: str) -> str:
                 response_text = f"Task Delegation:\n{final_response['delegation'] or 'No delegation details captured.'}\n\nGrocery List:\n{final_response['grocery'] or 'No response received from grocery agent.'}\n\nElectronics Sales:\n{final_response['sales'] or 'No response received from sales agent.'}"
                 #print(f"Emitting final response: {response_text[:100]}...")
                 #await sio.emit('message', {'detail': response_text}, to=sid)
-                await sio.emit('message', {'task_delegation': final_response['delegation'] or 'No delegation details captured.'}, to=sid)
-                await sio.emit('message', {'grocery_agent': final_response['grocery'] or 'No response received from grocery agent.'}, to=sid)
-                await sio.emit('message', {'sales_agent': final_response['sales'] or 'No response received from sales agent.'}, to=sid)
+                #await sio.emit('message', {'task_delegation': final_response['delegation'] or 'No delegation details captured.'}, to=sid)
+                #await sio.emit('message', {'grocery_agent': final_response['grocery'] or 'No response received from grocery agent.'}, to=sid)
+                #await sio.emit('message', {'sales_agent': final_response['sales'] or 'No response received from sales agent.'}, to=sid)
+                await sio.emit('Agent', {'type':"Coordinator Agent", "Status": "Completed", 'response': final_response['delegation'] or 'No delegation details captured.'}, to=sid)
+                await sio.emit('Agent', {'type':"Grocery Agent", "Status": "Completed", 'response': final_response['grocery'] or 'No response received from grocery agent.'}, to=sid)
+                await sio.emit('Agent', {'type':"Sales Agent", "Status": "Completed", 'response': final_response['sales'] or 'No response received from sales agent.'}, to=sid)
                 response_emitted = True
                 break
         
