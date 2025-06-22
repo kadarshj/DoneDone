@@ -32,3 +32,6 @@ class SignupVerifyRequest(BaseModel):
 
 class RefreshToken(BaseModel):
     refresh_token: str
+
+class QueryRequest(BaseModel):
+    user_query: str

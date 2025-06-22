@@ -4,10 +4,10 @@ from pydantic import BaseModel
 import socketio
 from SocketCreate import sio   # Import the shared sio instance
 from database import users_collection, ping_server
-from models import User, UserInDB, OTPRequest, OTPVerify, Token, SignupVerifyRequest, OTPVerifyLogin, RefreshToken
+from models import User, UserInDB, OTPRequest, OTPVerify, Token, SignupVerifyRequest, OTPVerifyLogin, RefreshToken, QueryRequest
 from auth import generate_otp, verify_otp, create_access_token, create_refresh_token, get_current_user, refresh_access_token
 # Import the async function
-from coordinator import process_user_query_simple
+from coordinator import process_user_query_simple, process_user_query_simple_agent
 from bson import ObjectId
 import asyncio
 import os
@@ -62,7 +62,7 @@ async def signup_request_otp(otp_request: OTPRequest):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     await generate_otp(otp_request.email, purpose="signup")
-    return {"message": "OTP sent to your email"}
+    return {"status": "success", "message": "OTP sent to your email"}
 
 @app.post("/signup/verify-otp/", response_model=Token)
 async def signup_verify_otp(data: SignupVerifyRequest):
@@ -73,7 +73,7 @@ async def signup_verify_otp(data: SignupVerifyRequest):
     #return user_dict
     access_token = await create_access_token({"sub": data.email})
     refresh_token = await create_refresh_token({"sub": data.email})
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    return {"status": "success", "access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @app.post("/login/request-otp/")
 async def login_request_otp(otp_request: OTPRequest):
@@ -82,7 +82,7 @@ async def login_request_otp(otp_request: OTPRequest):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     await generate_otp(otp_request.email, purpose="login")
-    return {"message": "OTP sent to your email"}
+    return {"status": "success", "message": "OTP sent to your email"}
 
 @app.post("/login/verify-otp/", response_model=Token)
 async def login_verify_otp(otp_verify: OTPVerifyLogin):
@@ -97,18 +97,30 @@ async def login_verify_otp(otp_verify: OTPVerifyLogin):
 
     access_token = await create_access_token({"sub": otp_verify.email})
     refresh_token = await create_refresh_token({"sub": otp_verify.email})
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    return {"status": "success", "access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @app.post("/refresh/", response_model=Token)
 async def refresh_token(RefreshToken: RefreshToken):
     """Refresh access token using refresh token"""
     access_token = await refresh_access_token(RefreshToken.refresh_token)
-    return {"access_token": access_token, "refresh_token": RefreshToken.refresh_token, "token_type": "bearer"}
+    return {"status": "success", "access_token": access_token, "refresh_token": RefreshToken.refresh_token, "token_type": "bearer"}
 
 @app.get("/users/me/", response_model=UserInDB)
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     """Get current user info"""
     return current_user
+
+@app.post("/users/agent/query/")
+async def agent_query(payload: QueryRequest, current_user: dict = Depends(get_current_user)):
+    """Handle user query through agent"""
+    user_query = payload.user_query
+    if not user_query:
+        raise HTTPException(status_code=400, detail="Query cannot be empty")
+    print(f"Received query from {current_user['id']}: {user_query}")
+    # Call the async function that handles the agent processing
+    response = await process_user_query_simple_agent(user_query, current_user["id"])
+    #return {"response": response}
+    return response
 
 # --- WebSocket Events ---
 
