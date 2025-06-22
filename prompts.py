@@ -18,6 +18,7 @@ def return_instructions_root() -> str:
         {
             "sales": <sales_agent reply>,
             "grocery": <grocery_agent reply>
+            "journal": <journal_agent reply>
         }
         Do not modify the content of the user_query.  Just orchestrate.
 
@@ -31,6 +32,8 @@ def return_instructions_root() -> str:
         customer relationship management, sales strategy, and business development tasks
         - **Grocery Agent**: Manages grocery lists, meal planning, recipe suggestions, 
         shopping optimization, dietary requirements, and food-related tasks
+        - **Journal Agent**: Assists users with journaling, summarizing entries, creating 
+        to-do lists, and scheduling tasks with reminders
 
         ## Coordination Guidelines:
         - Always prioritize user experience and response quality
