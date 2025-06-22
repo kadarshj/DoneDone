@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import socketio
 from SocketCreate import sio   # Import the shared sio instance
 from database import users_collection, ping_server
-from models import User, UserInDB, OTPRequest, OTPVerify, Token, SignupVerifyRequest, OTPVerifyLogin, RefreshToken, QueryRequest
+from models import User, UserInDB, OTPRequest, OTPVerify, Token, SignupVerifyRequest, OTPVerifyLogin, RefreshToken, QueryRequest, QueryResponse
 from auth import generate_otp, verify_otp, create_access_token, create_refresh_token, get_current_user, refresh_access_token
 # Import the async function
 from coordinator import process_user_query_simple, process_user_query_simple_agent
@@ -55,7 +55,7 @@ async def root():
     """Root endpoint"""
     return {"message": "Hello World"}
 
-@app.post("/signup/request-otp/")
+@app.post("/signup/request-otp/", response_model=QueryResponse)
 async def signup_request_otp(otp_request: OTPRequest):
     """Request OTP for signup"""
     existing_user = await users_collection.find_one({"email": otp_request.email})
@@ -75,7 +75,7 @@ async def signup_verify_otp(data: SignupVerifyRequest):
     refresh_token = await create_refresh_token({"sub": data.email})
     return {"status": "success", "access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
-@app.post("/login/request-otp/")
+@app.post("/login/request-otp/", response_model=QueryResponse)
 async def login_request_otp(otp_request: OTPRequest):
     """Request OTP for login"""
     user = await users_collection.find_one({"email": otp_request.email})

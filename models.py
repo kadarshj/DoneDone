@@ -10,7 +10,6 @@ class UserInDB(User):
 
 class OTPRequest(BaseModel):
     email: EmailStr
-    status: str
 
 class OTPVerify(BaseModel):
     name: str
@@ -38,3 +37,7 @@ class RefreshToken(BaseModel):
 
 class QueryRequest(BaseModel):
     user_query: str
+
+class QueryResponse(BaseModel):
+    status: str
+    message: str
