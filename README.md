@@ -89,6 +89,9 @@ Stay tuned — or star the repo to follow along.
 Built with love and frustration by engineers who wanted to feel that satisfaction of saying:  
 > “It’s DoneDone.”
 
+<img width="472" alt="image" src="https://github.com/user-attachments/assets/694bf0e3-b98c-4431-b52b-e7d6267b59dd" />
+
+
 ---
 
 ## 📬 Contact
