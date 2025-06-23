@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoneDone - Access Control</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ffff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Animated star field background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            animation: slideIn 1.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .login-panel {
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 50px rgba(0, 255, 255, 0.4),
+                inset 0 0 30px rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #ffaa00, #ff0040, #00ffff);
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo-section {
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ffaa00, #ff0040);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            color: #ffaa00;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .access-text {
+            font-size: 0.9rem;
+            color: #00ffff;
+            opacity: 0.8;
+        }
+        
+        .form-section {
+            margin: 30px 0;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .input-label {
+            display: block;
+            color: #ffaa00;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .input-field:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00ffff, #0099cc);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(135deg, #00ccff, #0066aa);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .login-btn:hover::before {
+            left: 100%;
+        }
+        
+        .divider {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        }
+        
+        .divider-text {
+            background: rgba(0, 20, 40, 0.9);
+            padding: 0 20px;
+            color: #ffaa00;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .biometric-section {
+            margin-top: 20px;
+        }
+        
+        .biometric-btn {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 170, 0, 0.1);
+            border: 2px solid #ffaa00;
+            border-radius: 10px;
+            color: #ffaa00;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .biometric-btn:hover {
+            background: rgba(255, 170, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .forgot-links {
+            margin-top: 30px;
+        }
+        
+        .forgot-link {
+            color: rgba(0, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 10px 0;
+        }
+        
+        .forgot-link:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .footer-text {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+        
+        .error-message {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid #ff0040;
+            border-radius: 8px;
+            padding: 12px;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 12px;
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .login-container {
+                max-width: 350px;
+                padding: 15px;
+            }
+            
+            .login-panel {
+                padding: 30px 25px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Loading animation */
+        .loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="login-container">
+        <div class="login-panel">
+            <div class="logo-section">
+                <div class="logo">DONEDONE</div>
+                <div class="subtitle">GALACTIC TASK COMMANDER</div>
+                <div class="access-text">Secure Access Portal</div>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Access denied. Please check your credentials.
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                Access granted. Initializing command center...
+            </div>
+            
+            <form class="form-section" id="loginForm">
+                <div class="input-group">
+                    <label class="input-label" for="username">Commander ID</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        class="input-field" 
+                        placeholder="Enter your commander ID"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="password">Access Code</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="input-field" 
+                        placeholder="Enter your access code"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    🚀 Initiate Access Sequence
+                </button>
+            </form>
+            
+            <div class="divider">
+                <div class="divider-text">Alternative Access</div>
+            </div>
+            
+            <div class="biometric-section">
+                <button class="biometric-btn" id="fingerprintBtn">
+                    👆 Biometric Scanner
+                </button>
+                
+                <button class="biometric-btn" id="voiceBtn">
+                    🎤 Voice Recognition
+                </button>
+            </div>
+            
+            <div class="forgot-links">
+                <a href="#" class="forgot-link" id="forgotPassword">Forgot Access Code?</a>
+                <a href="#" class="forgot-link" id="createAccount">Request New Commander ID</a>
+            </div>
+            
+            <div class="footer-text">
+                Authorized personnel only. All access attempts are monitored and logged by the Galactic Security Division.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate star field
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 150;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 1) + 's';
+                starsContainer.appendChild(star);
+            }
+            
+            // Add some floating particles
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                starsContainer.appendChild(particle);
+            }
+        }
+        
+        // Form handling
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const usernameField = document.getElementById('username');
+        const passwordField = document.getElementById('password');
+        
+        // Hide messages
+        function hideMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+        
+        // Show error message
+        function showError(message) {
+            hideMessages();
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            hideMessages();
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+        }
+        
+        // Simulate loading
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.classList.add('loading');
+                loginBtn.textContent = 'Verifying Access...';
+            } else {
+                loginBtn.classList.remove('loading');
+                loginBtn.innerHTML = '🚀 Initiate Access Sequence';
+            }
+        }
+        
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            const username = usernameField.value.trim();
+            const password = passwordField.value.trim();
+            
+            if (!username || !password) {
+                showError('Please enter both Commander ID and Access Code.');
+                return;
+            }
+            
+            setLoading(true);
+            
+            // Simulate authentication delay
+            setTimeout(() => {
+                setLoading(false);
+                
+                // Simple demo authentication (replace with real auth)
+                if (username.toLowerCase() === 'admin' && password === 'password') {
+                    showSuccess('Access granted! Welcome, Commander. Redirecting to command center...');
+                    
+                    // Simulate redirect to main app
+                    setTimeout(() => {
+                        alert('Authentication successful! This would redirect to your DoneDone dashboard.');
+                        // window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } else if (username.toLowerCase() === 'demo' && password === 'demo') {
+                    showSuccess('Demo access granted! Initializing training mode...');
+                    
+                    setTimeout(() => {
+                        alert('Demo mode activated! This would redirect to the demo version.');
+                    }, 2000);
+                    
+                } else {
+                    showError('Invalid credentials. Access denied by security protocols.');
+                }
+            }, 2000);
+        });
+        
+        // Biometric authentication buttons
+        document.getElementById('fingerprintBtn').addEventListener('click', () => {
+            showError('Biometric scanner not available. Please use standard login.');
+        });
+        
+        document.getElementById('voiceBtn').addEventListener('click', () => {
+            showError('Voice recognition system offline. Please use manual authentication.');
+        });
+        
+        // Forgot password link
+        document.getElementById('forgotPassword').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Password recovery request sent to Galactic Command. Check your secure communication channel.');
+        });
+        
+        // Create account link
+        document.getElementById('createAccount').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('New Commander ID requests must be approved by the High Council. Contact your supervisor.');
+        });
+        
+        // Add some interactive effects
+        const inputFields = document.querySelectorAll('.input-field');
+        inputFields.forEach(field => {
+            field.addEventListener('focus', () => {
+                field.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            field.addEventListener('blur', () => {
+                field.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Initialize
+        generateStars();
+        
+        // Add demo credentials hint
+        setTimeout(() => {
+            const demoHint = document.createElement('div');
+            demoHint.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(255, 170, 0, 0.1);
+                border: 1px solid #ffaa00;
+                padding: 15px;
+                border-radius: 10px;
+                font-size: 0.8rem;
+                color: #ffaa00;
+                font-family: 'Orbitron', monospace;
+                max-width: 250px;
+                z-index: 1000;
+                animation: fadeIn 0.5s ease-in;
+            `;
+            demoHint.innerHTML = `
+                <strong>Demo Access:</strong><br>
+                Username: admin<br>
+                Password: password<br>
+                <br>
+                Or try: demo / demo
+            `;
+            document.body.appendChild(demoHint);
+            
+            // Auto-hide demo hint after 10 seconds
+            setTimeout(() => {
+                demoHint.style.animation = 'fadeOut 0.5s ease-out forwards';
+                setTimeout(() => demoHint.remove(), 500);
+            }, 10000);
+        }, 3000);
+    </script>
+</body>
+</html>
