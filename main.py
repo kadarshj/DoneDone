@@ -7,7 +7,7 @@ from database import users_collection, ping_server
 from models import User, UserInDB, OTPRequest, OTPVerify, Token, SignupVerifyRequest, OTPVerifyLogin, RefreshToken, QueryRequest, QueryResponse
 from auth import generate_otp, verify_otp, create_access_token, create_refresh_token, get_current_user, refresh_access_token
 # Import the async function
-from coordinator import process_user_query_simple, process_user_query_simple_agent
+from coordinator import process_user_query_simple, process_user_query_simple_agent, process_user_query_simple_agent_work
 from bson import ObjectId
 import asyncio
 import os
@@ -16,6 +16,7 @@ from jose import jwt
 from urllib.parse import parse_qs
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
+from bson import ObjectId
 import json
 
 load_dotenv()
@@ -114,11 +115,18 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
 async def agent_query(payload: QueryRequest, current_user: dict = Depends(get_current_user)):
     """Handle user query through agent"""
     user_query = payload.user_query
+    mode = payload.mode
     if not user_query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
     print(f"Received query from {current_user['id']}: {user_query}")
     # Call the async function that handles the agent processing
-    response = await process_user_query_simple_agent(user_query, current_user["id"])
+    if mode == "personal_diary":
+        print(f"Processing as {mode}")
+        response = await process_user_query_simple_agent(user_query, current_user["id"], current_user["email"])
+    if mode == "work_protocol":
+        print(f"Processing as {mode}")
+        response = await process_user_query_simple_agent_work(user_query, current_user["id"], current_user["email"])
+    #response = await process_user_query_simple_agent(user_query, current_user["id"])
     #return {"response": response}
     return response
 

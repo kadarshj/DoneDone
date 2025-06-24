@@ -37,6 +37,7 @@ class RefreshToken(BaseModel):
 
 class QueryRequest(BaseModel):
     user_query: str
+    mode: str
 
 class QueryResponse(BaseModel):
     status: str

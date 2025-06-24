@@ -3,6 +3,7 @@ FROM python:3.10-slim
 
 # Set environment variables to prevent prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
 
 # Set the working directory
 WORKDIR /app
@@ -18,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
+    && python -m spacy download en_core_web_sm
 
 
 # Expose FastAPI port

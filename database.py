@@ -17,6 +17,16 @@ db = client[DB_NAME]
 # Collections
 users_collection = db["users"]
 otp_collection = db["otps"]
+User_query_collection = db["user_queries"]
+#user_contacts_collection = db["user_contacts"]
+read_contacts_collection = db["read_contacts"]
+schedule_call_reminder_collection = db["schedule_call_reminders"]
+update_health_metrics_collection = db["update_health_metrics"]
+set_health_reminder_collection = db["set_health_reminders"]
+send_mood_history_collection = db["send_mood_history"]
+aggregate_tasks_collection = db["aggregate_tasks"]
+store_client_insights_collection = db["store_client_insights"]
+store_meeting_summary_collection = db["store_meeting_summary"]
 
 async def ping_server():
     """Test MongoDB connection"""
