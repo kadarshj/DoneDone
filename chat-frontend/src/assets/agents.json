@@ -1,0 +1,69 @@
+{
+"personal": [
+    {
+    "id": "agent1",
+    "icon": "🤝",
+    "name": "SOCIAL LIFE AGENT",
+    "status": "IDLE",
+    "description": "Track and remind about social connections. Read personal contact list, send call reminder, draft follow-up email"
+    },
+    {
+    "id": "agent2",
+    "icon": "🏋️",
+    "name": "HEALTH TRACKER",
+    "status": "IDLE",
+    "description": "Track personal improvement goals (BMI, habits). Capture progress in Google Sheet, set calendar reminder, draft progress email"
+    },
+    {
+    "id": "agent3",
+    "icon": "🛍️",
+    "name": "SMART SHOPPER",
+    "status": "IDLE",
+    "description": "Help find deals for gadgets, clothes, etc. Extract shopping items from transcript, return top 3 deals with comparison"
+    },
+    {
+    "id": "agent4",
+    "icon": "🧠",
+    "name": "MOOD INSIGHT",
+    "status": "IDLE",
+    "description": "Log and trend emotional state. Detect mood, suggest content to improve motivation, email summary"
+    },
+    {
+    "id": "agent5",
+    "icon": "📋",
+    "name": "COORDINATOR",
+    "status": "IDLE",
+    "description": "Summarize all agent tasks into a daily log. Aggregate outputs, compile report, send final email"
+    }
+],
+"work": [
+    {
+    "id": "agent1",
+    "icon": "🔍",
+    "name": "CLIENT INTEL",
+    "status": "IDLE",
+    "description": "Extract requirements from client conversations. Parse client transcript, extract objectives, pain points, and goals"
+    },
+    {
+    "id": "agent2",
+    "icon": "📄",
+    "name": "PROPOSAL DRAFTER",
+    "status": "IDLE",
+    "description": "Generate proposal (objectives, challenges, solution). Use extracted insights to draft structured proposals with 3 key sections"
+    },
+    {
+    "id": "agent3",
+    "icon": "🎤",
+    "name": "MEETING SUMMARIZER",
+    "status": "IDLE",
+    "description": "Summarize meeting/diary notes. Summarize main topics, action items, and outcomes from meetings or notes"
+    },
+    {
+    "id": "agent4",
+    "icon": "⚡",
+    "name": "ACTION EXECUTOR",
+    "status": "IDLE",
+    "description": "Execute tasks and manage workflows. Automate repetitive tasks, manage deadlines, and coordinate team efforts"
+    }
+]
+}

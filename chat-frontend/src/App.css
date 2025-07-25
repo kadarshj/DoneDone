@@ -1,0 +1,399 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    color: #00ffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated star field background */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.container {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width:70%;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    animation: slideDown 1s ease-out;
+}
+
+.logo {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, #00ffff, #ffaa00, #ff0040);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #ffaa00;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: #ff0040;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.logout-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 15px rgba(255, 0, 64, 0.8);
+}
+
+.main-panel {
+    background: rgba(0, 20, 40, 0.8);
+    border: 2px solid #00ffff;
+    border-radius: 20px;
+    box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.3),
+        inset 0 0 20px rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.2s ease-out;
+}
+
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.mode-btn {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #ffaa00;
+    border-radius: 10px;
+    color: #ffaa00;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mode-btn:hover, .mode-btn.active {
+    background: linear-gradient(135deg, #ffaa00, #ff6b00);
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 170, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+.mode-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.mode-btn:hover::before {
+    left: 100%;
+}
+
+.agents-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.agent-card {
+    background: rgba(0, 30, 60, 0.8);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(45deg, #00ffff, #ffaa00, #ff0040, #00ffff);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.agent-card.active::before {
+    opacity: 1;
+    animation: borderGlow 2s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.agent-card.active {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+}
+
+.agent-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.agent-icon {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+.agent-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffaa00;
+}
+
+.agent-status {
+    font-size: 0.7rem;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.status-idle {
+    background: rgba(100, 100, 100, 0.3);
+    color: #ccc;
+}
+
+.status-active {
+    background: rgba(0, 255, 0, 0.3);
+    color: #00ff00;
+    animation: pulse 2s infinite;
+}
+
+.status-processing {
+    background: rgba(255, 170, 0, 0.3);
+    color: #ffaa00;
+    animation: pulse 1s infinite;
+}
+
+
+.agent-description {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #00ffff;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .logo {
+        font-size: 2rem;
+    }
+    
+    .main-panel {
+        padding: 20px;
+    }
+    
+    .mode-selector {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .agents-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically on small screens */
+    align-items: center;
+    gap: 15px; /* Spacing between elements */
+    padding: 25px;
+    background: rgba(0, 20, 40, 0.8); /* Consistent with main-panel */
+    border: 2px solid #00ffff; /* Neon border */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow:
+        0 0 30px rgba(0, 255, 255, 0.3),
+        inset 0 0 20px rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    margin-top: 30px; /* Space from elements above */
+    animation: fadeInUp 1.2s ease-out; /* Match main-panel animation */
+    width: 100%; /* Take full width of its parent */
+    max-width: 900px; /* Limit max width for better readability */
+    margin-left: auto; /* Center the container */
+    margin-right: auto; /* Center the container */
+}
+
+/* CSS for a fixed-height textarea with scrolling */
+.chat-container textarea {
+    width: 100%;
+    height: 100px; /* Set a fixed height */
+    padding: 15px 20px;
+    background: rgba(0, 30, 60, 0.9);
+    border: 1px solid #00ffff;
+    border-radius: 10px;
+    color: #00ffff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    resize: vertical; /* Allow user to resize vertically, or 'none' to disable */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    line-height: 1.5;
+}
+
+.chat-container textarea::placeholder {
+    color: rgba(0, 255, 255, 0.6);
+}
+
+.chat-container textarea:focus {
+    border-color: #ffaa00;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.5), inset 0 0 10px rgba(255, 170, 0, 0.3);
+}
+
+.process-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #00ffff, #0099cc);
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.process-btn:hover {
+    background: linear-gradient(135deg, #00ccff, #0066aa);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+}
+
+/* Specific styles for the VOICE COMMAND button */
+.voice-command-btn {
+    /* Base appearance: vibrant green/cyan */
+    background: linear-gradient(135deg, #00ff99, #00cc66); /* Bright green to darker green */
+    color: #0a0a0a; /* Dark text for strong contrast */
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.6); /* Green glow */
+    border: 2px solid #00ff99; /* Matching border */
+    letter-spacing: 1px; /* Slightly more spaced out text */
+    padding: 4px;
+    border-radius: 20px;
+}
+
+.voice-command-btn:hover {
+    /* Hover effect: slightly brighter green, subtle lift */
+    background: linear-gradient(135deg, #00ffcc, #00e673);
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 255, 153, 0.8); /* Stronger green glow on hover */
+    border-color: #00ffcc;
+}
+
+/* Style for when the voice command button is actively listening (pulsing red) */
+.voice-command-btn.listening {
+    background: linear-gradient(135deg, #ff0040, #cc0033); /* Intense red gradient when active */
+    color: white; /* White text for active state */
+    box-shadow: 0 0 30px rgba(255, 0, 64, 0.8); /* Strong red glow */
+    animation: pulseRed 1.5s infinite alternate; /* Pulsing effect for listening */
+    border-color: #ff0040; /* Matching red border */
+}
+
+/* Keyframe for red pulse animation (if not already defined in your CSS) */
+@keyframes pulseRed {
+    0% { box-shadow: 0 0 30px rgba(255, 0, 64, 0.8); }
+    100% { box-shadow: 0 0 10px rgba(255, 0, 64, 0.3); }
+}
